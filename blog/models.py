@@ -19,7 +19,7 @@ class Posts(models.Model):
     category = models.ForeignKey(
         Categories, on_delete=models.CASCADE, related_name="post_category"
     )
-    tags = models.ManyToManyField(Tags, through="PostTags", related_name="posts")
+    tags = models.ManyToManyField(Tags, related_name="post_tags")
     place_visited = models.ForeignKey(
         Destinations, on_delete=models.CASCADE, related_name="post_destination"
     )
@@ -69,16 +69,6 @@ class Tags(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class PostTags(models.Model):
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name="post_tags")
-    tag = models.ForeignKey(Tags, on_delete=models.CASCADE, related_name="post_tags")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.post.title} - {self.tag.name}"
 
 
 class Countries(models.Model):

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "account",
     "api",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,15 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "account.User"
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "TRAVEL BLOG API",
+    "DESCRIPTION": "API for the travel blog",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
