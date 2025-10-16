@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "account",
     "api",
     "drf_spectacular",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -128,9 +129,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "account.User"
 
 REST_FRAMEWORK = {
-    # YOUR SETTINGS
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
+
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "TRAVEL BLOG API",
