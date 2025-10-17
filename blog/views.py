@@ -14,6 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from blog.permissions import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_spectacular.utils import extend_schema
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # Create your views here.
@@ -21,6 +23,15 @@ class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ["category", "status", "author"]
+    search_fields = ["title", "tags", "content", "place_visited", "date_visited"]
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ["-created_at"]
 
     def get_serializer_class(self):
         if self.action == "images":
@@ -58,7 +69,7 @@ class PostView(viewsets.ModelViewSet):
 
 
 class CommentView(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by("-created_at")
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
@@ -69,4 +80,6 @@ class CommentView(viewsets.ModelViewSet):
 class CategoryView(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name"]
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]

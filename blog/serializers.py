@@ -11,6 +11,9 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
+    tags = serializers.ListField(
+        child=serializers.CharField(max_length=30), required=False
+    )
 
     class Meta:
         model = Post
