@@ -4,7 +4,7 @@ from account.models import User
 # Create your models here.
 
 
-class Posts(models.Model):
+class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
         PUBLISHED = "published", "Published"
@@ -17,12 +17,10 @@ class Posts(models.Model):
     )
     slug = models.SlugField(blank=True, null=True)
     category = models.ForeignKey(
-        Categories, on_delete=models.CASCADE, related_name="post_category"
+        "Category", on_delete=models.CASCADE, related_name="post_category"
     )
-    tags = models.ManyToManyField(Tags, related_name="post_tags")
-    place_visited = models.ForeignKey(
-        Destinations, on_delete=models.CASCADE, related_name="post_destination"
-    )
+    tags = models.ManyToManyField("Tag", related_name="post_tags")
+    place_visited = models.CharField(max_length=200)
     date_visited = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -31,7 +29,7 @@ class Posts(models.Model):
         return self.title
 
 
-class Categories(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,19 +39,18 @@ class Categories(models.Model):
         return self.name
 
 
-class Images(models.Model):
+class Image(models.Model):
     image = models.ImageField(upload_to="images/")
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name="images")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images")
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.image.url
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     content = models.TextField()
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,32 +59,10 @@ class Comments(models.Model):
         return self.content
 
 
-class Tags(models.Model):
+class Tag(models.Model):
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Countries(models.Model):
-    name = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Destinations(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    country = models.ForeignKey(
-        Countries, on_delete=models.CASCADE, related_name="destinations"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):
         return self.name

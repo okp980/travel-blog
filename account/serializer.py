@@ -2,6 +2,20 @@ from rest_framework import serializers
 from account.models import User
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ["password", "groups", "user_permissions"]
+        read_only_fields = [
+            "id",
+            "date_joined",
+            "last_login",
+            "is_active",
+            "is_staff",
+            "is_superuser",
+        ]
+
+
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=200)
     email = serializers.EmailField()
