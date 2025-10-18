@@ -20,6 +20,7 @@ class Post(models.Model):
         "Category", on_delete=models.CASCADE, related_name="post_category"
     )
     tags = models.JSONField(default=list, blank=True)
+    likes = models.ManyToManyField(User, related_name="liked_posts")
     place_visited = models.CharField(max_length=200)
     date_visited = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,6 +52,7 @@ class Image(models.Model):
 class Comment(models.Model):
     content = models.TextField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    likes = models.ManyToManyField(User, related_name="liked_comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

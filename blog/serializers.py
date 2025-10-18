@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from blog.models import Post, Comment, Category, Image
+from account.serializer import UserSerializer
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -15,12 +16,32 @@ class PostSerializer(serializers.ModelSerializer):
         child=serializers.CharField(max_length=30), required=False
     )
 
+    author = UserSerializer(read_only=True)
+    likes = serializers.SerializerMethodField()
+    is_liked_by_user = serializers.SerializerMethodField()
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+
+    def get_is_liked_by_user(self, obj):
+        return obj.likes.filter(id=self.context["request"].user.id).exists()
+
     class Meta:
         model = Post
         fields = "__all__"
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    likes = serializers.SerializerMethodField()
+    is_liked_by_user = serializers.SerializerMethodField()
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+
+    def get_is_liked_by_user(self, obj):
+        return obj.likes.filter(id=self.context["request"].user.id).exists()
+
     class Meta:
         model = Comment
         fields = "__all__"

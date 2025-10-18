@@ -67,6 +67,24 @@ class PostView(viewsets.ModelViewSet):
         serializer = self.get_serializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(
+        detail=True,
+        methods=["post"],
+    )
+    def like(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.likes.add(request.user)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        methods=["post"],
+    )
+    def unlike(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.likes.remove(request.user)
+        return Response(status=status.HTTP_200_OK)
+
 
 class CommentView(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by("-created_at")
@@ -75,6 +93,24 @@ class CommentView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(
+        detail=True,
+        methods=["post"],
+    )
+    def like(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.likes.add(request.user)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
+        methods=["post"],
+    )
+    def unlike(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.likes.remove(request.user)
+        return Response(status=status.HTTP_200_OK)
 
 
 class CategoryView(viewsets.ModelViewSet):
