@@ -70,6 +70,7 @@ class PostView(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
+        serializer_class=None,
     )
     def like(self, request, *args, **kwargs):
         post = self.get_object()
@@ -78,7 +79,8 @@ class PostView(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=["post"],
+        methods=["delete"],
+        serializer_class=None,
     )
     def unlike(self, request, *args, **kwargs):
         post = self.get_object()
@@ -97,6 +99,7 @@ class CommentView(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
+        serializer_class=None,
     )
     def like(self, request, *args, **kwargs):
         comment = self.get_object()
@@ -105,7 +108,8 @@ class CommentView(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=["post"],
+        methods=["delete"],
+        serializer_class=None,
     )
     def unlike(self, request, *args, **kwargs):
         comment = self.get_object()
