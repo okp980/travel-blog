@@ -23,6 +23,10 @@ class RegisterSerializer(serializers.Serializer):
     password2 = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
+        if User.objects.filter(email=attrs["email"]).exists():
+            raise serializers.ValidationError({"error": "Email already exists"})
+        if User.objects.filter(username=attrs["username"]).exists():
+            raise serializers.ValidationError({"error": "Username already exists"})
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"error": "Passwords do not match"})
         return attrs
