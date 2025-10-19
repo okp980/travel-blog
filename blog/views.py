@@ -67,20 +67,20 @@ class PostView(viewsets.ModelViewSet):
         serializer = self.get_serializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(request=None)
     @action(
         detail=True,
         methods=["post"],
-        serializer_class=None,
     )
     def like(self, request, *args, **kwargs):
         post = self.get_object()
         post.likes.add(request.user)
         return Response(status=status.HTTP_200_OK)
 
+    @extend_schema(request=None)
     @action(
         detail=True,
         methods=["delete"],
-        serializer_class=None,
     )
     def unlike(self, request, *args, **kwargs):
         post = self.get_object()
@@ -96,20 +96,17 @@ class CommentView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(
-        detail=True,
-        methods=["post"],
-        serializer_class=None,
-    )
+    @extend_schema(request=None)
+    @action(detail=True, methods=["post"])
     def like(self, request, *args, **kwargs):
         comment = self.get_object()
         comment.likes.add(request.user)
         return Response(status=status.HTTP_200_OK)
 
+    @extend_schema(request=None)
     @action(
         detail=True,
         methods=["delete"],
-        serializer_class=None,
     )
     def unlike(self, request, *args, **kwargs):
         comment = self.get_object()

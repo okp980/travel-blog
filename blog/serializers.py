@@ -20,10 +20,10 @@ class PostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
 
-    def get_likes(self, obj):
+    def get_likes(self, obj) -> int:
         return obj.likes.count()
 
-    def get_is_liked_by_user(self, obj):
+    def get_is_liked_by_user(self, obj) -> bool:
         return obj.likes.filter(id=self.context["request"].user.id).exists()
 
     class Meta:
@@ -36,10 +36,10 @@ class CommentSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
 
-    def get_likes(self, obj):
+    def get_likes(self, obj) -> int:
         return obj.likes.count()
 
-    def get_is_liked_by_user(self, obj):
+    def get_is_liked_by_user(self, obj) -> bool:
         return obj.likes.filter(id=self.context["request"].user.id).exists()
 
     class Meta:
