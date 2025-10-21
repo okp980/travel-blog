@@ -26,7 +26,6 @@ class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    category = serializers.ReadOnlyField(source="category.name")
 
     def get_likes(self, obj) -> int:
         return obj.likes.count()
