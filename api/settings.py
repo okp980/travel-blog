@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-m-hp-g=%g64@5hw!^99_e6qkro+hk)(6uiv!%mjrbu@i30usjx"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["okp980.pythonanywhere.com", "localhost", "127.0.0.1"]
 
@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "TRAVEL BLOG API",
-    "DESCRIPTION": "API for the travel blog",
+    "DESCRIPTION": "A Django REST API for sharing travel experiences with features for creating posts, managing categories, uploading images, and engaging through comments and likes",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
