@@ -11,7 +11,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

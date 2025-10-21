@@ -10,7 +10,11 @@ from blog.serializers import (
     CategorySerializer,
     ImageSerializer,
 )
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+)
 from blog.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_spectacular.utils import extend_schema
@@ -22,7 +26,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -57,7 +61,7 @@ class PostView(viewsets.ModelViewSet):
         serializer.save(post=post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=["get"])
     def comments(self, request, *args, **kwargs):
         post = self.get_object()
         comments = post.comments.all().order_by("-created_at")
@@ -86,7 +90,7 @@ class PostView(viewsets.ModelViewSet):
 class CommentView(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by("-created_at")
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -115,4 +119,4 @@ class CategoryView(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
-    permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminUserOrReadOnly]
