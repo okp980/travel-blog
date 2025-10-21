@@ -11,6 +11,12 @@ class ImageSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
 class PostSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     tags = serializers.ListField(
@@ -20,6 +26,7 @@ class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
+    category = CategorySerializer()
 
     def get_likes(self, obj) -> int:
         return obj.likes.count()
@@ -49,10 +56,4 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = "__all__"
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
         fields = "__all__"

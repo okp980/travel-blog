@@ -11,7 +11,7 @@ from blog.serializers import (
     ImageSerializer,
 )
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from blog.permissions import IsOwnerOrReadOnly
+from blog.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters
@@ -61,8 +61,9 @@ class PostView(viewsets.ModelViewSet):
     def comments(self, request, *args, **kwargs):
         post = self.get_object()
         comments = post.comments.all().order_by("-created_at")
-        serializer = self.get_serializer(comments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(comments)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @extend_schema(request=None)
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
@@ -114,4 +115,4 @@ class CategoryView(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
