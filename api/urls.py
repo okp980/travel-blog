@@ -7,6 +7,7 @@ from drf_spectacular.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
+from account.views import RootView
 
 urlpatterns = (
     [
@@ -22,6 +23,7 @@ urlpatterns = (
             SpectacularRedocView.as_view(url_name="schema"),
             name="redoc",
         ),
+        path("", RootView.as_view(), name="root"),
         path("", include("blog.urls")),
         path("", include("account.urls")),
     ]

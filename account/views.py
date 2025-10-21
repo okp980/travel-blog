@@ -5,8 +5,28 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 
 # Create your views here.
+
+
+class RootView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response(
+            {
+                "docs": reverse("swagger-ui", request=request),
+                "auth": {
+                    "login": reverse("token_obtain_pair", request=request),
+                    "register": reverse("register", request=request),
+                },
+                "blog": {
+                    "posts": reverse("post-list", request=request),
+                    "comments": reverse("comment-list", request=request),
+                    "categories": reverse("category-list", request=request),
+                },
+            }
+        )
 
 
 class RegisterView(generics.CreateAPIView):
